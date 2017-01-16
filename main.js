@@ -2,7 +2,8 @@ if(window.navigator.userAgent.toLowerCase().match('.net')) {
     window.alert('Your browser is a dinosaur, please use Firefox, Chrome or Safari');
 }
 
-var sampleData = [
+
+/*var sampleData = [
         {
             "q": "What color is the sky?",
             "a": "Blue",
@@ -32,7 +33,7 @@ var sampleData = [
 
 if (!window.localStorage.getItem('flashcards')) {
     window.localStorage.setItem('flashcards', JSON.stringify(sampleData));
-}
+}*/
 
 var data = null;
 var dataOrder = null;
@@ -66,6 +67,7 @@ if (data) {
 }
 else {
     window.localStorage.setItem('flashcards', '[]');
+    data = getData();
 }
 
 function saveData() {
@@ -135,6 +137,13 @@ function checkAnswer() {
         review = review.replace('{{final}}', final).replace('{{correct}}', correctAnswers.length).replace('{{total}}', data.length);
         showMessage(review, 'info');
 
+        if (counter > 4 && ! localStorage.getItem('receipt')) {
+            var receipt = prompt("Please enter your name to get an extra credit receipt code:");
+            receipt = getReceipt(receipt);
+            localStorage.setItem('receipt', receipt);
+            prompt("copy the code below and send it to your teacher for extra credit:", receipt);
+        }
+
         reset();
     }
 }
@@ -172,6 +181,10 @@ document.querySelector("#cardback").addEventListener('click', function(e) {
 
     document.querySelector('#message').className = 'alert';
     document.querySelector('#message').innerHTML = '&nbsp;';
+
+    if (counter === 0) {
+        data = getData();
+    }
 
     if (data.length > 1) {
         if (!dataOrder) {
